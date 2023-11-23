@@ -66,11 +66,29 @@ class Tamagocha
             HungryChanged?.Invoke(this, EventArgs.Empty);
         }
     }
-    public int Dirty { get; set; } = 0;
-    public int Thirsty { get; set; } = 0;
+    public int Dirty
+    {
+        get => dirty;
+        set
+        {
+            dirty = value;
+            DirtyChanged?.Invoke(this, EventArgs.Empty);
+        }
+    }
+    public int Thirsty
+    {
+        get => thirsty;
+        set
+        {
+            thirsty = value;
+            ThirstyChanged?.Invoke(this, EventArgs.Empty);
+        }
+    }
     public bool IsDead { get; set; } = false;
 
     public event EventHandler HungryChanged;
+    public event EventHandler DirtyChanged;
+    public event EventHandler ThirstyChanged;
 
     public Tamagocha()
     {
@@ -79,6 +97,8 @@ class Tamagocha
     }
 
     private int hungry = 0;
+    private int dirty = 0;
+    private int thirsty = 0;
     Random random = new Random();
 
     private void LifeCircle(object? obj)
@@ -86,15 +106,15 @@ class Tamagocha
         while (!IsDead)
         {
             Thread.Sleep(1000);
-            int rnd = random.Next(0, 2);
+            int rnd = random.Next(0, 6);
             switch (rnd)
             {
                 case 0: JumpMinute(); break;
                 case 1: FallSleep(); break;
-                case 2: break;
-                case 3: break;
-                case 4: break;
-                case 5: break;
+                case 2: Coffe(); break;
+                case 3: HotGod(); break;
+                case 4: Pilps(); break;
+                case 5: Drugs(); break;
                 default: break;
             }
         }
@@ -106,6 +126,37 @@ class Tamagocha
         Thirsty += random.Next(5, 10);
         Hungry += random.Next(5, 10);
         Dirty += random.Next(5, 10);
+        
+    }
+
+    private void Coffe()
+    {
+        WriteMessageToConsole($"{Name} внезапно начинает пить кофе. Какой Ужас! Это продолжается целую минуту. Показатели голода повышены, жажда понижена!");
+        Thirsty -= random.Next(5, 10);
+        Hungry += random.Next(5, 10);
+    }
+
+    private void HotGod()
+    {
+        WriteMessageToConsole($"{Name} внезапно начинает есть горячего Бога. Какой Ужас! Это продолжается целую минуту. Показатели голода понижены, жажда повышена!");
+        Thirsty += random.Next(5, 10);
+        Hungry -= random.Next(5, 10);
+    }
+
+    private void Pilps()
+    {
+        WriteMessageToConsole($"{Name} внезапно начинает есть таблетки. Еблан! Это продолжается целую минуту. Показатели голода и жажды понижены, жизнь повышена!");
+        Hungry += random.Next(5, 10);
+        Thirsty += random.Next(5, 10);
+        Health += random.Next(5, 10);
+    }
+
+    private void Drugs()
+    {
+        WriteMessageToConsole($"{Name} внезапно начинает курить. Неужели трава!? Это продолжается целую минуту. Показатели голода, жажды и жизни понижены!");
+        Thirsty += random.Next(5, 10);
+        Hungry += random.Next(5, 10);
+        Health -= random.Next(5, 10);
     }
 
     private void JumpMinute()
